@@ -14,5 +14,4 @@ router.delete('/', (req,res)=>{
     controller.getAllNotes(req,res);
 });
 
-
 module.exports = router;
