@@ -11,7 +11,7 @@ router.get('/', (req,res)=>{
 });
 
 router.delete('/', (req,res)=>{
-    controller.getAllNotes(req,res);
+    controller.deleteNotes(req,res);
 });
 
 module.exports = router;

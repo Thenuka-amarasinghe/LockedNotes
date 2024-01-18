@@ -10,4 +10,8 @@ function getAllNotes(callback) {
     collection.find({}).toArray(callback);
 }
 
-module.exports = {postNotes,getAllNotes}
+function deleteNote(callback) {
+    collection.remove(Notes, callback);
+}
+
+module.exports = {postNotes,getAllNotes,deleteNote}
