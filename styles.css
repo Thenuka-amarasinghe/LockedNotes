@@ -1,4 +1,51 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
 .navbar {
-    width: 95%;
+    width: 100%;
+    height: auto;
+    min-height: 110px;
+    padding: 20px 10px;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.logo {
+    width: 170px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.main-body {
+    padding: 20px;
+}
+
+.container {
+    width: 90%;
     margin: 0 auto;
 }
+
+.btn-rounded {
+    border-radius: 20px; 
+}
+  
+.btn-rounded i.material-icons {
+    border-radius: 50%;
+}
+
+.transparent-btn {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    color: inherit;
+  }
+
+  .transparent-btn:hover {
+    background-color: transparent;
+    color: #ffa200;
+  }

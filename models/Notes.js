@@ -1,17 +1,20 @@
-let client = require('../dbConnection');
+const client = require('../dbConnection');
+const collection = client.db().collection('Notes');
 
-let collection = client.db().collection('Notes');
-
-function postNotes(Notes, callback) {
-    collection.insertOne(Notes,callback);
+function postNotes(note, callback) {
+    collection.insertOne(note, callback);
 }
 
 function getAllNotes(callback) {
     collection.find({}).toArray(callback);
 }
 
-function deleteNote(callback) {
-    collection.remove(Notes, callback);
+function updateNote(noteId, updatedNote, callback) {
+    collection.updateOne({ _id: noteId }, { $set: updatedNote }, callback);
 }
 
-module.exports = {postNotes,getAllNotes,deleteNote}
+function deleteNote(noteId, callback) {
+    collection.deleteOne({ _id: noteId }, callback);
+}
+
+module.exports = { postNotes, getAllNotes, updateNote, deleteNote };
