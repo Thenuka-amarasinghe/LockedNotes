@@ -21,15 +21,7 @@ const getAllNotes = (req, res) => {
     });
 };
 
-const deleteNotes = (req, res) => {
-    let Notes = req.body; // Assuming you send the noteId in the request body
-    collection.deleteNote(Notes.noteId, (err, result) => {
-        if (!err) {
-            res.json({ statusCode: 200, data: result, message: 'success' });
-        } else {
-            res.status(500).json({ statusCode: 500, message: 'Internal Server Error' });
-        }
-    });
+module.exports = {
+    postNotes,
+    getAllNotes
 };
-
-module.exports = { postNotes, getAllNotes, deleteNotes };

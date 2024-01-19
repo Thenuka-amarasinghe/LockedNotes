@@ -1,4 +1,4 @@
-/* This adds HTML elements and displays the existing notes with given variables */
+/* Displaying exsiting notes */
 const addCards = (items) => {
     items.forEach((item) => {
         let itemToAppend =
@@ -12,24 +12,25 @@ const addCards = (items) => {
             item.description +
             '</p></div>' +
             '<div class="card-action right-align">' +
-            '<a class="btn btn-rounded transparent-btn update-note-btn" data-note-id="' +
-            '"><i class="material-icons orange-text">edit</i></a>' +
-            '<a class="btn btn-rounded transparent-btn delete-note-btn" data-note-id="' +
-            '"><i class="material-icons orange-text">delete</i></a>' +
+            '<a class="btn btn-rounded transparent-btn update-note-btn" data-note-id=' +
+            item._id +
+            '><i class="material-icons orange-text">edit</i></a>' +
+            '<a class="btn btn-rounded transparent-btn delete-note-btn" data-note-id=' +
+            item._id +
+            '><i class="material-icons orange-text">delete</i></a>' +
             '</div></div></div>';
         $("#card-section").append(itemToAppend);
     });
 };
 
-/* Submitting form with data */
 const formSubmitted = () => {
     let formData = {};
     formData.title = $('#title').val();
     formData.description = $('#description').val().replace(/\n/g, '<br>');
     postNotes(formData);
+    location.reload();
 };
 
-/* Posting notes to the MongoDB */
 function postNotes(Notes){
     $.ajax({
         url:'/api/Notes',
@@ -44,7 +45,6 @@ function postNotes(Notes){
     });
 }
 
-/* Getting all notes from the DB */
 function getAllNotes() {
     $.get('/api/Notes', (response) => {
         if (response.statusCode === 200) {
@@ -53,15 +53,13 @@ function getAllNotes() {
     });
 }
 
-/* Defining commands to run */
 $(document).ready(function () {
     $('.materialboxed').materialbox();
+
     $('#formSubmit').click(() => {
         formSubmitted();
     });
     $('.modal').modal();
     getAllNotes();
 });
-
-let socket = io();
 
