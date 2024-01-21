@@ -33,6 +33,18 @@ const getNote = (req, res) => {
     });
 };
 
+const updateNote = (req, res) => {
+    console.log('updateNote method in controller.js');
+    let id = req.params.id;
+    let updatedData = req.body;
+    collection.updateNote(id, updatedData, (error, result) => {
+        if (!error) {
+            res.json({ statusCode: 200, data: result, message: 'success' });
+        } else {
+            res.status(500).json({ statusCode: 500, message: 'Internal Server Error' });
+        }
+    });
+};
 
 const deleteNote = (req, res) => {
     let id = req.params.id;    ;
@@ -49,5 +61,6 @@ module.exports = {
     postNotes,
     getAllNotes,
     getNote,
+    updateNote,
     deleteNote
 };
