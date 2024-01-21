@@ -10,4 +10,11 @@ router.get('/', (req, res) => {
     controller.getAllNotes(req, res);
 });
 
+// Delete Notes
+//router.delete("/notes/delete/:id", isAuthenticated, deleteNote);
+router.delete("/:id", (req, res) => {
+    console.log('Delete api called in router.js');
+    controller.deleteNote(req, res);
+});
+
 module.exports = router;
