@@ -10,10 +10,15 @@ function getAllNotes(callback) {
     collection.find({}).toArray(callback);
 }
 
-function getNote(id, callback) {
+async function getNote(id, callback) {
     console.log('GET api by ID called in Notes.js');
-    const objectId = require('mongodb').ObjectId;
-    collection.findOne({ _id: objectId }, callback);
+    try {
+        const objectId = new ObjectId(id);
+        const result = await collection.findOne({ _id: objectId });
+        callback(null, result);
+    } catch (error) {
+        callback(error, null);
+    }
 }
 
 async function deleteNote(id, callback) {
