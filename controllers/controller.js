@@ -21,7 +21,19 @@ const getAllNotes = (req, res) => {
     });
 };
 
+const deleteNote = (req, res) => {
+    let id = req.params.id;    ;
+    collection.deleteNote(id, (error, result) => {
+        if (!error) {
+            res.json({ statusCode: 200, data: result, message: 'success' });
+        } else {
+            res.status(500).json({ statusCode: 500, message: 'Internal Server Error' });
+        }
+    });
+};
+
 module.exports = {
     postNotes,
-    getAllNotes
+    getAllNotes,
+    deleteNote
 };
