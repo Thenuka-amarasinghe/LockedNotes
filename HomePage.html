@@ -13,88 +13,97 @@
     <nav>
         <div class="nav-wrapper navbar">
             <a href="HomePage.html" class="brand-logo logo_css"><img class="logo" src="Logo.png"></a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="#about">About us</a></li>
+                <li><a href="#access-note">Access a note</a></li>
+                <li><a href="#sign-in-out">Sign In/Sign Out</a></li>
+            </ul>
         </div>
     </nav>
 
     <!-- Website Content -->
     <main class="main-body">
         <div class="container">
-            <div class="row">
-                <div class="col s12 center-align">
-                    <h1 id="heading">Welcome to LockedNotes version 1.0</h1>
-                    <h2>Hello this is Charles</h2>
-                    <p class="flow-text">This is the basic structure of our LockedNotes Application</p>
+            
+            <!-- Hero section -->
+            <section class="hero-section">
+                <div class="container center-align">
+                    <h1>Make Secure Notes</h1>
+                    <p class="flow-text">Using our state-of-the-art encryption technology, you can write, view, and share important notes securely.</p>
+                    <a href="#signup" class="btn orange btn-rounded">Sign Up Now!</a>
                 </div>
-                <!-- Add notes Button -->
-                <div class="col s12 center-align">
-                    <a class="btn-floating btn-large waves-effect waves-light blue click-me-button modal-trigger" id="clickMeButton" data-target="newNote">
-                        <i class="material-icons orange">add</i>
-                    </a>
+            </section>
+
+            <!-- Featured Message -->
+            <section class="featured-message">
+                <div class="container center-align">
+                    <h2>Featured Message</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 </div>
-            </div>
+            </section>
 
-            <!-- Modal which allows adding notes -->
-            <div id="newNote" class="modal modal-fixed-footer">
-                <div class="row modal-content">
-                    <form id="noteForm" class="col s12">
-						<input type="hidden" id="noteId" name="noteId">
-
-                        <div class="row">
-                            <div class="input-field col s6">
-                                <input id="title" type="text" class="validate">
-                                <label for="title">Title</label>
+            <!-- Testimonial Section -->
+            <section class="testimonial-section">
+                <div class="container">
+                    <div class="row">
+                        <div class="col s12 m6">
+                            <div class="testimonial">
+                                <img src="male-avatar.jpg" alt="Male Avatar" class="avatar">
+                                <p>"LockedNotes changed the way I organize and secure my notes. It's a game-changer!"</p>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <textarea id="description" type="text" class="materialize-textarea validate"></textarea>
-                                <label for="description">Description</label>
+                        <div class="col s12 m6">
+                            <div class="testimonial">
+                                <img src="female-avatar.jpg" alt="Female Avatar" class="avatar">
+                                <p>"I love how easy it is to use LockedNotes. It provides the security I need for my sensitive information."</p>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="input-field col s12 center-align">
-                                <a class="blue waves-effect waves-light btn orange" id="formSubmit">Add Note</a>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
-					
-			<!-- Update Modal -->
-			<div id="updateNoteModal" class="modal">
-				<div class="modal-content">
-					<h4>Update Note</h4>
-					<form id="updateNoteForm">
-						<div class="row">
-							<div class="input-field col s6">
-								<input id="updateTitle" type="text" class="validate">
-								<label for="updateTitle"></label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="input-field col s12">
-								<textarea id="updateDescription" class="materialize-textarea validate"></textarea>
-								<label for="updateDescription"></label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="input-field col s12">
-								<button class="btn waves-effect waves-light" type="button" id="updateNoteBtn">Update</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
+            </section>
 
-            <!-- Header before displaying notes -->
-            <div class="center-align">
-                <h4 class="header center-align">Your Notes</h4>
-            </div>
+            <!-- Feature Section -->
+            <section class="feature-section">
+                <div class="container">
+                    <div class="row">
+                        <div class="col s12 m6">
+                            <div class="feature">
+                                <h3>Secure Encryption</h3>
+                                <p>Our advanced encryption ensures that your notes are secure and protected from unauthorized access.</p>
+                            </div>
+                        </div>
+                        <div class="col s12 m6">
+                            <div class="feature">
+                                <h3>User-Friendly Interface</h3>
+                                <p>LockedNotes provides a simple and intuitive interface, making it easy for users to navigate and manage their notes.</p>
+                            </div>
+                        </div>
+                        <div class="col s12 m6">
+                            <div class="feature">
+                                <h3>Collaboration</h3>
+                                <p>Collaborate with others by sharing encrypted notes securely. Work together on important projects with ease.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-			<!-- Displaying existing notes -->
-			<div class="row" id="card-section">
-				
-			</div>			
+            <!-- Footer Section -->
+            <footer class="footer-section">
+                <div class="container">
+                    <div class="row">
+                        <div class="col s12 center-align">
+                            <p>&copy; 2024 LockedNotes. All rights reserved.</p>
+                            <p>Subscribe to our newsletter for updates and special offers.</p>
+                            <form action="#" method="post" class="newsletter-form">
+                                <input type="email" name="email" placeholder="Enter your email address" required>
+                                <button type="submit" class="btn orange btn-rounded">Subscribe</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
         </div>
     </main>
 
