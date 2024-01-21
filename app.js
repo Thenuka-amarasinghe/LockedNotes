@@ -29,6 +29,15 @@ const addCards = (items) => {
             console.log('deleteNode method called');
             deleteNote(noteId);
         });
+
+        // Attaching click event listener to the update button
+        $('#card-section').on('click', '.update-note-btn', function() {
+            var noteId = $(this).data('note-id');
+            console.log('Attaching click event listener to the update button in each card');
+            console.log('updateNote method in app.js for ID = ', noteId);
+            console.log('updateNode method called');
+            openUpdateForm(noteId);
+        });
 };
 
 const formSubmitted = () => {
@@ -86,6 +95,45 @@ const removeCard = (id) => {
     // the element with the specified id attribute is found and its parent element is removed,
     // which is the whole card container, like <div class="col s12">)
     $(`[data-note-id="${id}"]`).closest('.col.s12').remove();
+};
+
+function openUpdateForm(noteId) {
+    console.log('openUpdateForm method in app.js. ID = ', noteId);
+    // Fetch the existing note data
+    $.get(`/api/Notes/${noteId}`, (response) => {
+        if (response.statusCode === 200) {
+            // Populate the update form with existing data
+            $('#updateTitle').val(response.data.title);
+            $('#updateDescription').val(response.data.description);
+            // Show the update modal
+            $('#updateNoteModal').modal('open');
+            $('#updateNoteBtn').click(() => {
+                updateNote(noteId);
+            });
+        }
+    });
+}
+
+function updateNote(id) {
+    console.log('updateNote method in app.js. ID = ', id);
+    let updatedData = {
+        title: $('#updateTitle').val(),
+        description: $('#updateDescription').val().replace(/\n/g, '<br>')
+    };
+
+    $.ajax({
+        url: `/api/Notes/${id}`,
+        method: 'PUT',
+        data: updatedData,
+        success: function(response) {
+            console.log(`Updating note with ID: ${id}`);
+            console.log('Updated successfully', response);
+            location.reload();
+        },
+        error: function(error) {
+            console.error('Error updating note by ID:', error);
+        }
+    });
 };
 
 //event handler for the "document ready" event.
