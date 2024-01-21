@@ -31,4 +31,22 @@ async function deleteNote(id, callback) {
     });
 }
 
-module.exports = { postNotes, getAllNotes, getNote, deleteNote};
+function updateNote(id, updatedData, callback) {
+    console.log('Update api called in Notes.js. Id=', id);
+    
+    collection.findOneAndUpdate(
+        { _id: ObjectId(id) },
+        { $set: updatedData },
+        { returnDocument: 'after' }, // to get the updated document
+        (err, result) => {
+            if (result.value) {
+                console.log('Note updated successfully:', result.value);
+            } else {
+                console.log('No document was found to update.');
+            }
+            callback(err, result.value);
+        }
+    );
+}
+
+module.exports = { postNotes, getAllNotes, getNote, updateNote, deleteNote};
