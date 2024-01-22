@@ -4,7 +4,8 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "test": "mocha --reporter spec"
+        "test": "mocha --reporter spec",
+        "nodemon": "nodemon ./server.js localhost 3000"
     },
     "repository": {
         "type": "git",
