@@ -84,7 +84,8 @@
 			if(result.status === 'ok'){
 				//everything is working as intended
 				console.log('Got the token', result.data)
-				alert('Login Successful!')
+				alert('Login Successful! Now redirecting to home page...')
+				window.location.href = '/HomePage.html';
 			}else{
 				alert(result.error)
 			}

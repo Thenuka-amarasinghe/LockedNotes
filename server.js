@@ -14,7 +14,7 @@ const jwt = require('jsonwebtoken')
 
 const jwt_Secret = 'thisisastringthatissupposedtobesecret123129!#$%^&*!#(!#)_312039812903809128'
 
-mongoose.connect('mongodb://localhost:27017/login-LockedNotes')
+mongoose.connect('mongodb://127.0.0.1:27017/login-LockedNotes')
 
 app.use(express.static(__dirname + '/'));
 app.use(express.json());
@@ -70,37 +70,46 @@ app.post('/api/register', async (req, res) => {
 })
 
 app.post('/api/login', async (req, res) => {
-    console.log('req body', req.body)
-        const { username, password } = req.body     
-    console.log('username', username, 'password', password)
-    passwordString = toString(password)
+    const { username, password } = req.body;
 
-    console.log('Login password', passwordString)
+    try {
+        // Check that user exists
+        const user = await User.findOne({ username }).lean();
 
-    //Check that user exists
-    const user = await User.findOne({ username }).lean()
+        // If no matching user account to username found, let the user know
+        if (!user) {
+            console.error("User not found")
+            return res.json({ status: 'error', error: 'Invalid username/password' });
+        }
 
-    //If no matching user account to username found, let user know
-    if(!user) {
-        return res.json({ status: 'error', error: 'Invalid username/password'})
+        passwordString = toString(password)
+        // Compare the provided password with the hashed password stored for the user
+        if (await bcrypt.compare(passwordString, user.password)) {
+            // If the password comparison is successful, proceed with login
+
+            // Use JWT to sign a token
+            const token = jwt.sign({ 
+                id: user._id, 
+                username: user.username
+            }, jwt_Secret);
+
+            // Set the token as a cookie or in the response header
+            // res.cookie('token', token); 
+
+            // Redirect to the home page
+            console.log("Correct!");
+            return res.json({ status: 'ok', data: token});
+            // res.redirect('/HomePage.html');
+        } else {
+            // If the password comparison fails, let the user know
+            console.error("Wrong password!")
+            res.json({ status: 'error', data: 'Invalid username/password' });
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ status: 'error', error: 'Internal Server Error: login failed' });
     }
-    
-    console.log('Login password', passwordString)
-    if(await bcrypt.compare(passwordString, user.password)){
-        //If the password compares and is compatible with the hashed password stored for the user, proceed with login
-
-        //Use JWT to sign a token
-        const token = jwt.sign({ 
-            id: user._id, 
-            username: user.username
-        }, jwt_Secret)
-        return res.json({ status: 'ok', data: token})
-    }
-
-    res.json({status: 'error', data: 'Invalid username/password'})
-
-
-})
+});
 
 io.on('connection',(socket)=>{
     console.log('User Connected');
