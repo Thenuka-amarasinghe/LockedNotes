@@ -12,6 +12,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use('/api/Notes',router);
 
+app.get('/', function(req, res){
+    res.redirect('/HomePage.html');
+});
+
 io.on('connection',(socket)=>{
     console.log('User Connected');
     socket.on('disconnect', () => {
