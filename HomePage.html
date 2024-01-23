@@ -11,8 +11,15 @@
 <body>
     <!-- Navigation bar -->
     <nav>
-        <div class="nav-wrapper navbar">
-            <a href="HomePage.html" class="brand-logo logo_css"><img class="logo" src="Logo.png"></a>
+        <div class="navbar">
+            <div class="navbar-left">
+                <a href="HomePage.html" class="brand-logo logo_css"><img class="logo" src="Logo.png"></a>
+            </div>
+            <div class="navbar-right">
+                <button class="nav-button">About Us</button>
+                <button class="nav-button">Access a Note</button>
+                <button class="nav-button">Sign In</button>
+            </div>
         </div>
     </nav>
 
@@ -20,80 +27,24 @@
     <main class="main-body">
         <div class="container">
             <div class="row">
-                <div class="col s12 center-align">
-                    <h1 id="heading">Welcome to LockedNotes version 1.0</h1>
-                    <p class="flow-text">This is the basic structure of our LockedNotes Application</p>
-                </div>
-                <!-- Add notes Button -->
-                <div class="col s12 center-align">
-                    <a class="btn-floating btn-large waves-effect waves-light blue click-me-button modal-trigger" id="clickMeButton" data-target="newNote">
-                        <i class="material-icons orange">add</i>
-                    </a>
-                </div>
+                    <h1 id="heading" class="center-align">Welcome to LockedNotes!</h1>
             </div>
 
-            <!-- Modal which allows adding notes -->
-            <div id="newNote" class="modal modal-fixed-footer">
-                <div class="row modal-content">
-                    <form id="noteForm" class="col s12">
-						<input type="hidden" id="noteId" name="noteId">
-
-                        <div class="row">
-                            <div class="input-field col s6">
-                                <input id="title" type="text" class="validate">
-                                <label for="title">Title</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <textarea id="description" type="text" class="materialize-textarea validate"></textarea>
-                                <label for="description">Description</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 center-align">
-                                <a class="blue waves-effect waves-light btn orange" id="formSubmit">Add Note</a>
-                            </div>
-                        </div>
-                    </form>
+            <div class="container">
+                <div class="content">
+                    <h3>Make Secure Notes</h3>
+                    <p>LockedNotes allows you to securely store notes, be they private notes or notes that you would like to share with special people in your life. All encrypted for whoever's eyes you wish to have see, so what are you waiting for? Sign Up Now!!</p><br>
+                    <button class="sign-up-button">Sign Up!</button>
                 </div>
-            </div>
-					
-			<!-- Update Modal -->
-			<div id="updateNoteModal" class="modal">
-				<div class="modal-content">
-					<h4>Update Note</h4>
-					<form id="updateNoteForm">
-						<div class="row">
-							<div class="input-field col s6">
-								<input id="updateTitle" type="text" class="validate">
-								<label for="updateTitle"></label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="input-field col s12">
-								<textarea id="updateDescription" class="materialize-textarea validate"></textarea>
-								<label for="updateDescription"></label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="input-field col s12">
-								<button class="btn waves-effect waves-light" type="button" id="updateNoteBtn">Update</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-
-            <!-- Header before displaying notes -->
-            <div class="center-align">
-                <h4 class="header center-align">Your Notes</h4>
-            </div>
-
-			<!-- Displaying existing notes -->
-			<div class="row" id="card-section">
-				
-			</div>			
+                <div class="content">
+                    <h2>Encryption</h2>
+                    <p>All of the encryption used is industry standard so you know that your notes are absolutely protected!</p>
+                </div>
+                <div class="content">
+                    <h2>Sharing</h2>
+                    <p>Sample text</p>
+                </div>
+            </div>		
         </div>
     </main>
 
