@@ -14,7 +14,7 @@ const jwt = require('jsonwebtoken')
 
 const jwt_Secret = 'thisisastringthatissupposedtobesecret123129!#$%^&*!#(!#)_312039812903809128'
 
-mongoose.connect('mongodb://localhost:27017/login-LockedNotes')
+mongoose.connect('mongodb://127.0.0.1:27017/login-LockedNotes')
 
 app.use(express.static(__dirname + '/'));
 app.use(express.json());
