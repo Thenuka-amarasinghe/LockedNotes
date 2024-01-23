@@ -28,22 +28,6 @@ body{
     margin-top: 20px;
 }
 
-.nav-button {
-    background-color: #E6A4B4;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin-left: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    border-radius: 20px; 
-}
-
-.nav-button:hover {
-    background-color: #FFF8E3;
-    color: black;
-}
-
 .main-body {
     padding: 20px;
 }
@@ -68,32 +52,26 @@ body{
     color: inherit;
   }
 
-/* .sign-up-button {
-    background-color: #E6A4B4;
-    color: white;
-    border: black;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-    border-radius: 3px;
-}
-*/
-
 .sign-up-button {
     color: white !important;
     border-radius: 3px !important;
     font-size: 1.2em !important;
     font-weight: 500 !important;
-    background-color: darken(orange, 90%) !important;
 }
 
 .sign-up-button:hover {
-    background-color: darken(orange, 50%) !important;
+    /* background-color: darken(#ff9800, 100%) !important; */
+    background-color: #C67700 !important;
+    font-size: 1.3em !important;
 }
 
 .container {
     padding: 20px;
+}
+
+.hero-section {
+    padding-top: 5em;
+    padding-bottom: 5em;
 }
 
 .content {
@@ -104,18 +82,26 @@ body{
 }
 
 .featured-message {
-    display: flex; /* Use flexbox to create a flex container */
+    display: flex;
+
+    div {
+        display: inline-block; /* Make the div inside .featured-message display inline */
+    }
+
+    img {
+        width: 300px;
+        height: 300px;
+    }
 }
 
-.featured-message div {
-    display: inline-block; /* Make the div inside .featured-message display inline */
-    /* Add any other styles as needed */
-}
 
 .testimonial-section {
 
+    padding-top: 5em;
+    padding-bottom: 5em;
+
     h2 {
-        
+
     }
 
     .avatar {
@@ -130,4 +116,27 @@ body{
         font-weight: bold;
     }
 
+}
+
+.footer-section {
+    display: flex;
+    padding: 35px;
+    background-color: white;
+    
+    input {
+        width: 50% !important;
+    }
+    button {
+        display: inline-block;
+    }
+
+    .copyright {
+        padding-top: 2em;
+        font-weight: bold;
+    }
+
+    .footer-right {
+        text-align: right;
+        margin-left: auto !important;
+    }
 }
