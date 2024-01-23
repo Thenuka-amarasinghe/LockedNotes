@@ -1,16 +1,19 @@
-body {
-    margin: 0;
-    padding: 0;
+body{
+	margin: 0;
+	padding: 0;
+	font-family: 'Jost', sans-serif;
+	background: linear-gradient(to bottom, #F5EEE6, #FFF8E3, #F3D7CA, #E6a4b4);
 }
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333;
-    color: white;
+    background-color: #F5EEE6;
+    color: black;
     padding: 20px;
     height: 80px;
+    border-bottom: 5px solid black;
 }
 
 .navbar-left, .navbar-right {
@@ -26,7 +29,7 @@ body {
 }
 
 .nav-button {
-    background-color: #555;
+    background-color: #E6A4B4;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -37,7 +40,8 @@ body {
 }
 
 .nav-button:hover {
-    background-color: #777;
+    background-color: #FFF8E3;
+    color: black;
 }
 
 .main-body {
@@ -65,7 +69,7 @@ body {
   }
 
 .sign-up-button {
-    background-color: #555;
+    background-color: #E6A4B4;
     color: white;
     border: black;
     padding: 10px 20px;
@@ -75,12 +79,14 @@ body {
     border-radius: 3px;
 }
 
-  .transparent-btn:hover {
-    background-color: transparent;
-    color: #ffa200;
+
+
+.sign-up-button:hover {
+    background-color: #FFF8E3;
+    color: black;
   }
 
-  .container {
+.container {
     padding: 20px;
 }
 
