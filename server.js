@@ -96,10 +96,8 @@ app.post('/api/login', async (req, res) => {
             // Set the token as a cookie or in the response header
             // res.cookie('token', token); 
 
-            // Redirect to the home page
-            console.log("Correct!");
             return res.json({ status: 'ok', data: token});
-            // res.redirect('/HomePage.html');
+
         } else {
             // If the password comparison fails, let the user know
             console.error("Wrong password!")
@@ -119,5 +117,5 @@ io.on('connection',(socket)=>{
 });
 
 http.listen(port, ()=>{
-    console.log('Express Server Started');
+    console.log(`Server running at http://localhost:${port}/`);
 });
