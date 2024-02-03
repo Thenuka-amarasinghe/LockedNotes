@@ -1,4 +1,5 @@
 let express = require('express');
+const session = require('express-session');
 let app = express();
 let port = process.env.port || 3000;
 require('./dbConnection');
@@ -11,8 +12,10 @@ const bodyParser = require('body-parser')
 const User = require('./models/Users')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const uuid = require('uuid');
 
 const jwt_Secret = 'thisisastringthatissupposedtobesecret123129!#$%^&*!#(!#)_312039812903809128'
+const session_Secret = 'LockedNotes5WVnp,/UhZZG61)PLCn>GLt5[/Kw=Pg[ibeK|gjP>Y$b&<ogD8a6*[}R_Or"VsM'
 
 mongoose.connect('mongodb://localhost:27017/login-LockedNotes')
 
@@ -23,6 +26,34 @@ app.use('/api/Notes',router);
 
 //Using bodyParser to read JSON data
 app.use(bodyParser.json())
+
+// Adding session management
+app.use(session({
+    secret: session_Secret,
+    resave: false,
+    saveUninitialized: false,
+  }));
+
+function authenticate(req, res, next) {
+    const token = req.session.token;
+
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    jwt.verify(token, jwt_Secret, (err, decoded) => {
+        if (err) {
+        return res.status(401).json({ message: 'Unauthorized' });
+        }
+        req.user = decoded;
+        next();
+    });
+}
+
+app.get('/AccountPage.html', authenticate, (req, res) => {
+    // Access user information using req.user
+    res.json({ message: 'Accessing user notes', user: req.user });
+  });
 
 app.get('/', function(req, res){
     res.redirect('/HomePage.html');
@@ -50,6 +81,7 @@ app.post('/api/register', async (req, res) => {
 
     try {
         const response = await User.create({
+            userID: uuid.v4(),
             username,
             password,
             email
@@ -90,10 +122,8 @@ app.post('/api/login', async (req, res) => {
         //If the password compares and is compatible with the hashed password stored for the user, proceed with login
 
         //Use JWT to sign a token
-        const token = jwt.sign({ 
-            id: user._id, 
-            username: user.username
-        }, jwt_Secret)
+        const token = jwt.sign(user, jwt_Secret, {expiresIn: '1h'});
+        req.session.token = token;
         return res.json({ status: 'ok', data: token})
     }
 
@@ -101,6 +131,22 @@ app.post('/api/login', async (req, res) => {
 
 
 })
+
+function authenticate(req, res, next) {
+  const token = req.session.token;
+
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  jwt.verify(token, 'your-jwt-secret', (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    req.user = decoded;
+    next();
+  });
+}
 
 io.on('connection',(socket)=>{
     console.log('User Connected');
