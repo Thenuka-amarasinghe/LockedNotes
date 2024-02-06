@@ -10,9 +10,11 @@ let io = require('socket.io')(http);
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const User = require('./models/Users')
+const Note = require('./models/Notes')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const uuid = require('uuid');
+const { ObjectId } = require('mongodb');
 
 const jwt_Secret = 'thisisastringthatissupposedtobesecret123129!#$%^&*!#(!#)_312039812903809128'
 const session_Secret = 'LockedNotes5WVnp,/UhZZG61)PLCn>GLt5[/Kw=Pg[ibeK|gjP>Y$b&<ogD8a6*[}R_Or"VsM'
@@ -144,6 +146,18 @@ app.post('/api/login', async (req, res) => {
     res.json({status: 'error', data: 'Invalid username/password'})
 
 })
+
+app.get('/api/getNotes', authenticate, async (req, res) => {
+    // Access user information using req.user
+    const username = req.session.username;
+    console.log(username);
+    console.log(req.session.username);
+  
+    // Assuming there's a 'username' field in your Note schema
+    const notes = await Note.find({ username: username }).lean();
+  
+    res.json({ statusCode: 200, data: notes, username: username });
+  });
   
 io.on('connection',(socket)=>{
     console.log('User Connected');

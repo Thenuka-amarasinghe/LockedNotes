@@ -64,10 +64,11 @@ function postNotes(Notes){
 }
 
 function getAllNotes() {
-    console.log(user.username);
-    console.log(req.session.username);
-    $.get('/api/Notes', (response) => {
+    console.log('Getting all notes');
+    $.get('/api/getNotes', (response) => {
+        console.log('getNotes API working')
         if (response.statusCode === 200) {
+            console.log(response.username);
             addCards(response.data);
         }
     });
