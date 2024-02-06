@@ -9,19 +9,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation bar -->
-    <nav>
-        <div class="navbar">
-            <div class="navbar-left">
-                <a href="HomePage.html" class="brand-logo logo_css"><img class="logo" src="Logo.png"></a>
-            </div>
-            <div class="navbar-right">
-                <button class="nav-button">About Us</button>
-                <button class="nav-button">Access a Note</button>
-                <button class="nav-button">Sign Out</button>
-            </div>
-        </div>
-    </nav>
+    <!-- include navbar module -->
+    <div id="navbar-module" include-html="/includes/navbar.html"></div>
 
     <!-- Website Content -->
     <main class="main-body">
@@ -104,13 +93,26 @@
         </div>
     </main>
 
-    <script> function logConsole(){
-        console.log(req.session.username);
-    } </script>
+    <!-- include footer module -->
+    <div id="footer-module" include-html="/includes/footer.html"></div>
+
+    <script> 
+        console.log("session data:", req.session.username);
+        function logConsole(){
+            console.log(req.session.username);
+        }
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
+    <!-- Script to handle HTML includes -->
+    <script>
+        $(function(){
+            $("#navbar-module").load("/includes/navbar.html");
+            $("#footer-module").load("/includes/footer.html");
+        });
+    </script>
 </body>
 </html>
