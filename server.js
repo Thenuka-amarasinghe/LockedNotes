@@ -45,7 +45,8 @@ function authenticate(req, res, next) {
   
     if (!token) {
       console.log('No token found, redirecting to login');
-      return res.redirect('/LoginPage.html');
+      var redirectUrl = '/LoginPage.html?' + new Date().getTime(); //Our web broswers keep caching this redirect request so we added a random variable to make it a fresh request every time
+      return res.redirect(redirectUrl);
     }
   
     jwt.verify(token, jwt_Secret, (err, decoded) => {
@@ -53,10 +54,11 @@ function authenticate(req, res, next) {
         console.error('Token verification failed:', err);
         console.log('Destroying session and redirecting to login');
         req.session.destroy();
-        return res.redirect('/LoginPage.html');
+        var redirectUrl = '/LoginPage.html?' + new Date().getTime(); //Our web broswers keep caching this redirect request so we added a random variable to make it a fresh request every time
+        return res.redirect(redirectUrl);
       }
   
-      console.log('Token verification successful, proceeding to the next middleware/route');
+      console.log('Token verification successful, we shall proceed.');
       req.user = decoded;
       next();
     });
@@ -154,6 +156,25 @@ app.get('/api/getNotes', authenticate, async (req, res) => {
   
     res.json({ statusCode: 200, data: notes, username: username });
   });
+
+app.post('/api/signout', (req, res) => {
+// Check if the user is logged in
+if (req.session.token) {
+    // Destroy the session token
+    req.session.destroy((err) => {
+    if (err) {
+        console.error('Error logging user out:', err);
+        return res.status(500).json({ status: 'error', error: err });
+    }
+    console.log('User logged out successfully');
+    return res.json({ status: 'ok', message: 'User logged out successfully' });
+    });
+} else {
+    // If the user is not logged in, return an error
+    return res.status(401).json({ status: 'error', error: 'User is not logged in' });
+}
+});
+    
   
 io.on('connection',(socket)=>{
     console.log('User Connected');
