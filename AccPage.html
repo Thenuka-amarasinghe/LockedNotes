@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LockedNotes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- include navbar module -->
+    <div id="navbar-module" include-html="/includes/navbar.html"></div>
+
+    <!-- Website Content -->
+    <main class="main-body">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 center-align">
+                    <h1 id="heading">Welcome!</h1>
+                </div>
+                <!-- Add notes Button -->
+                <div class="col s12 center-align">
+                    <a class="btn-floating btn-large waves-effect waves-light blue click-me-button modal-trigger" id="clickMeButton" data-target="newNote">
+                        <i class="material-icons orange">add</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row" id="note-list"></div>
+
+                     
+        </div>
+    </main>
+
+    <!-- include footer module -->
+    <div id="footer-module" include-html="/includes/footer.html"></div>
+
+    <script> 
+        // console.log("session data:", req.session.username);
+        // function logConsole(){
+        //     console.log(req.session.username);
+        // }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- Script to handle HTML includes -->
+    <script>
+        $(function(){
+            $("#navbar-module").load("/includes/navbar.html");
+            $("#footer-module").load("/includes/footer.html");
+        });
+    </script>
+
+    <!-- Get all notes -->
+    <script>
+        function getAllNotes() {
+            console.log('Getting all note...');
+            $.get('/api/getNotes', (response) => {
+                if (response.statusCode === 200) {
+                    // console.log("AccPage.html: response from GET notes api:", response)
+                    const clientKey = sessionStorage.getItem('clientKey');
+                    const notes = response.data;
+                    notes.forEach(note => {
+                        const decryptedTitle = CryptoJS.AES.decrypt(note.title, clientKey).toString(CryptoJS.enc.Utf8);
+                        const decryptedDescription = CryptoJS.AES.decrypt(note.description, clientKey).toString(CryptoJS.enc.Utf8);
+                        
+                        note.title = decryptedTitle;
+                        note.description = decryptedDescription;
+                    });
+                    addNotesToMarkup(notes);
+                }
+            });
+        }
+    
+        function addNotesToMarkup(notes) {
+            const noteList = $('#note-list');
+            noteList.empty(); // Clear existing notes
+    
+            notes.forEach(note => {
+                const card = `
+                    <div class="col s12 m6">
+                        <div class="card">
+                            <div class="card-content">
+                                <span class="card-title">${note.title}</span>
+                                <p>${note.description}</p>
+                            </div>
+                            <div class="card-action">
+                            <a class="edit-note-btn waves-effect waves-light btn" data-note-id="${note._id}">Edit</a>
+                            <a class="delete-note-btn waves-effect waves-light btn" data-note-id="${note._id}">Delete</a>
+                        </div>
+                        </div>
+                    </div>`;
+                noteList.append(card);
+            });
+
+            // Event listeners for edit and delete buttons
+            $('.edit-note-btn').click(function() {
+                const noteId = $(this).data('note-id');
+                // Implement your edit functionality here
+                console.log('Edit button clicked for note with ID:', noteId);
+            });
+
+            $('.delete-note-btn').click(function() {
+                const noteId = $(this).data('note-id');
+                // Implement your delete functionality here
+                console.log('Delete button clicked for note with ID:', noteId);
+            });
+        }
+    
+        $(document).ready(function() {
+            getAllNotes(); // Load notes when the page is ready
+        });
+    </script>
+</body>
+</html>

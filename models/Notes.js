@@ -14,7 +14,7 @@ function postNotes(note, callback) {
 }
 
 function getAllNotes(callback) {
-    collection.find({}).toArray(callback);
+    collection.find({ username: "4a5e44d3-0d47-414e-b875-6d78c9d911fa" }).toArray(callback);
 }
 
 async function getNote(id, callback) {

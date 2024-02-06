@@ -44,25 +44,25 @@ app.use(
 function authenticate(req, res, next) {
     console.log('Inside authenticate middleware');
     
-    const token = req.session.token;
+    // const token = req.session.token;
   
-    if (!token) {
-      console.log('No token found, redirecting to login');
-      return res.redirect('/LoginPage.html');
-    }
+    // if (!token) {
+    //   console.log('No token found, redirecting to login');
+    //   return res.redirect('/LoginPage.html');
+    // }
   
-    jwt.verify(token, jwt_Secret, (err, decoded) => {
-      if (err) {
-        console.error('Token verification failed:', err);
-        console.log('Destroying session and redirecting to login');
-        req.session.destroy();
-        return res.redirect('/LoginPage.html');
-      }
+    // jwt.verify(token, jwt_Secret, (err, decoded) => {
+    //   if (err) {
+    //     console.error('Token verification failed:', err);
+    //     console.log('Destroying session and redirecting to login');
+    //     req.session.destroy();
+    //     return res.redirect('/LoginPage.html');
+    //   }
   
-      console.log('Token verification successful, proceeding to the next middleware/route');
-      req.user = decoded;
+    //   console.log('Token verification successful, proceeding to the next middleware/route');
+    //   req.user = decoded;
       next();
-    });
+    // });
   }
 
 app.get('/AccountPage.html', authenticate, (req, res) => {
@@ -148,9 +148,9 @@ app.post('/api/login', async (req, res) => {
 
 app.get('/api/getNotes', authenticate, async (req, res) => {
     // Access user information using req.user
-    const username = req.session.username;
-    console.log(username);
-    console.log(req.session.username);
+    const username = "4a5e44d3-0d47-414e-b875-6d78c9d911fa";
+    // console.log(username);
+    // console.log(req.session.username);
   
     // Assuming there's a 'username' field in your Note schema
     const notes = await Note.find({ username: username }).lean();
