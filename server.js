@@ -11,7 +11,6 @@ let io = require('socket.io')(http);
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const User = require('./models/Users')
-const Note = require('./models/Notes')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const uuid = require('uuid');

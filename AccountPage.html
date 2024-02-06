@@ -43,7 +43,7 @@
             <div id="newNote" class="modal modal-fixed-footer">
                 <div class="row modal-content">
                     <form id="noteForm" class="col s12">
-                        <input type="hidden" id="noteId" name="noteId">
+						<input type="hidden" id="noteId" name="noteId">
 
                         <div class="row">
                             <div class="input-field col s6">
@@ -65,49 +65,47 @@
                     </form>
                 </div>
             </div>
-                    
-            <!-- Update Modal -->
-            <div id="updateNoteModal" class="modal">
-                <div class="modal-content">
-                    <h4>Update Note</h4>
-                    <form id="updateNoteForm">
-                        <div class="row">
-                            <div class="input-field col s6">
-                                <input id="updateTitle" type="text" class="validate">
-                                <label for="updateTitle"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <textarea id="updateDescription" class="materialize-textarea validate"></textarea>
-                                <label for="updateDescription"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <button class="btn waves-effect waves-light" type="button" id="updateNoteBtn">Update</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+					
+			<!-- Update Modal -->
+			<div id="updateNoteModal" class="modal">
+				<div class="modal-content">
+					<h4>Update Note</h4>
+					<form id="updateNoteForm">
+						<div class="row">
+							<div class="input-field col s6">
+								<input id="updateTitle" type="text" class="validate">
+								<label for="updateTitle"></label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="input-field col s12">
+								<textarea id="updateDescription" class="materialize-textarea validate"></textarea>
+								<label for="updateDescription"></label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="input-field col s12">
+								<button class="btn waves-effect waves-light" type="button" id="updateNoteBtn">Update</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
 
             <!-- Header before displaying notes -->
             <div class="center-align">
                 <h4 class="header center-align">Your Notes</h4>
             </div>
 
-            <!-- Displaying existing notes -->
-            <div class="row" id="card-section">
-                
-            </div>          
+			<!-- Displaying existing notes -->
+			<div class="row" id="card-section">
+				
+			</div>			
         </div>
     </main>
-
     <script> function logConsole(){
         console.log(req.session.username);
     } </script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
