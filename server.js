@@ -14,6 +14,7 @@ const User = require('./models/Users')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const uuid = require('uuid');
+const { ObjectId } = require('mongodb');
 
 const jwt_Secret = 'thisisastringthatissupposedtobesecret123129!#$%^&*!#(!#)_312039812903809128'
 const session_Secret = 'LockedNotes5WVnp,/UhZZG61)PLCn>GLt5[/Kw=Pg[ibeK|gjP>Y$b&<ogD8a6*[}R_Or"VsM'
@@ -71,7 +72,6 @@ app.get('/', function (req, res) {
   res.redirect('/HomePage.html');
 });
 
-
 app.post('/api/register', async (req, res) => {
     console.log(req.body)
 
@@ -128,6 +128,7 @@ app.post('/api/login', async (req, res) => {
         return res.json({ status: 'error', error: 'Invalid username/password'})
     }
     
+    console.log('Login password', passwordString)
     if(await bcrypt.compare(passwordString, user.password)){
         //If the password compares and is compatible with the hashed password stored for the user, proceed with login
 
@@ -140,10 +141,13 @@ app.post('/api/login', async (req, res) => {
 
     res.json({status: 'error', data: 'Invalid username/password'})
 
+})
 
 app.get('/api/getNotes', authenticate, async (req, res) => {
     // Access user information using req.user
     const username = req.session.username;
+    console.log(username);
+    console.log(req.session.username);
   
     // Assuming there's a 'username' field in your Note schema
     const notes = await Note.find({ username: username }).lean();

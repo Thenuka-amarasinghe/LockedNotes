@@ -1,9 +1,15 @@
 const client = require('../dbConnection');
 const collection = client.db().collection('Notes');
 const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
+
+const noteSchema = new mongoose.Schema({
+    title: { type: String},
+    description: { type: String},
+    username: { type: String }
+}, {collection: 'Notes'});
 
 function postNotes(note, callback) {
-    console.log('inside postNotes() in Notes.js');
     collection.insertOne(note, callback);
 }
 
