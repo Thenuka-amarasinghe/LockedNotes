@@ -17,6 +17,8 @@ const jwt = require('jsonwebtoken')
 const uuid = require('uuid');
 const { ObjectId } = require('mongodb');
 
+const crypto = require('crypto');
+
 const jwt_Secret = 'thisisastringthatissupposedtobesecret123129!#$%^&*!#(!#)_312039812903809128'
 const session_Secret = 'LockedNotes5WVnp,/UhZZG61)PLCn>GLt5[/Kw=Pg[ibeK|gjP>Y$b&<ogD8a6*[}R_Or"VsM'
 
@@ -74,45 +76,45 @@ app.get('/', function (req, res) {
 });
 
 app.post('/api/register', async (req, res) => {
-    console.log(req.body)
+    console.log("server.js:", req.body)
 
     const{ username, password : plainTextPassword, email } = req.body
 
-    if (!username || typeof username !== 'string') {
+    if (!username || typeof username !== 'string' || typeof plainTextPassword !== 'string') {
         return res.json({status: 'error', error: 'Username is invalid'})
     }
 
-    if (!plainTextPassword || typeof plainTextPassword !== 'string') {
-        return res.json({status: 'error', error: 'Password is invalid'})
-    }
-
-    if (plainTextPassword.length < 5) {
+    if (plainTextPassword.length < 6) {
         return res.json({status: 'error', error: 'Password should be at least 6 characters'})
     }
 
     const password = await bcrypt.hash(toString(plainTextPassword), 10)
     console.log('register password', password)
 
+    // Generate a unique encryption key based on the password
+    const clientKey = crypto.createHash('sha256').update(plainTextPassword).digest('hex');
+
     try {
         const response = await User.create({
             userID: uuid.v4(),
             username,
             password,
-            email
+            email,
+            clientKey
         })
-        console.log('User created successfully', response)
+        console.log('User created successfully', response);
+
+        // Send the encryption key as part of the response
+        res.json({ status: 'ok', clientKey });
     } catch (error) {
         console.log(error)
         
-
-        if(error.code === 11000) {
         //This error code matches to duplicate key i.e. username is already in use
+        if(error.code === 11000) {
             return res.json({status: 'error', error: 'Username already in use'})
         }
         return res.json({ status: 'error'})
     }
-
-    res.json({status: 'ok'})
 })
 
 app.post('/api/login', async (req, res) => {
@@ -123,7 +125,7 @@ app.post('/api/login', async (req, res) => {
 
     //Check that user exists
     const user = await User.findOne({ username }).lean()
-
+    console.log("user obj:", user);
     //If no matching user account to username found, let user know
     if(!user) {
         return res.json({ status: 'error', error: 'Invalid username/password'})
@@ -137,7 +139,7 @@ app.post('/api/login', async (req, res) => {
         const token = jwt.sign(user, jwt_Secret, {expiresIn: '1h'});
         req.session.token = token;
         req.session.username = user.username;
-        return res.json({ status: 'ok', data: token, username: user.username})
+        return res.json({ status: 'ok', data: token, username: user.username, clientKey: user.clientKey})
     }
 
     res.json({status: 'error', data: 'Invalid username/password'})

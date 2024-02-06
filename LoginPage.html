@@ -82,7 +82,11 @@
 
             if(result.status === 'ok'){
                 //everything is working as intended
-                console.log('Got the token', result.data)
+                console.log('Got the token', result)
+                console.log('Saving token, username & client key to Session Storage...')
+                sessionStorage.setItem('token', result.data);
+                sessionStorage.setItem('username', result.username);
+                sessionStorage.setItem('clientKey', result.clientKey);
                 alert('Login Successful!')
                 window.location.href = '/AccountPage.html';
             }else{
