@@ -24,40 +24,52 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use('/api/Notes',router);
 
-//Using bodyParser to read JSON data
-app.use(bodyParser.json())
+// Using bodyParser to read JSON data
+app.use(bodyParser.json());
 
 // Adding session management
-app.use(session({
+app.use(
+  session({
     secret: session_Secret,
     resave: false,
     saveUninitialized: false,
-  }));
+  })
+);
 
 function authenticate(req, res, next) {
+    console.log('Inside authenticate middleware');
+    
     const token = req.session.token;
-
+  
     if (!token) {
-        return res.status(401).json({ message: 'Unauthorized' });
+      console.log('No token found, redirecting to login');
+      return res.redirect('/LoginPage.html');
     }
-
+  
     jwt.verify(token, jwt_Secret, (err, decoded) => {
-        if (err) {
-        return res.status(401).json({ message: 'Unauthorized' });
-        }
-        req.user = decoded;
-        next();
+      if (err) {
+        console.error('Token verification failed:', err);
+        console.log('Destroying session and redirecting to login');
+        req.session.destroy();
+        return res.redirect('/LoginPage.html');
+      }
+  
+      console.log('Token verification successful, proceeding to the next middleware/route');
+      req.user = decoded;
+      next();
     });
-}
+  }
 
 app.get('/AccountPage.html', authenticate, (req, res) => {
-    // Access user information using req.user
-    res.json({ message: 'Accessing user notes', user: req.user });
-  });
-
-app.get('/', function(req, res){
-    res.redirect('/HomePage.html');
+  // Access user information using req.user
+  console.log(`Getting user's notes`);
+  res.sendFile(path.join(__dirname, 'public', 'AccountPage.html'));
 });
+
+app.get('/', function (req, res) {
+  res.redirect('/HomePage.html');
+});
+
 
 app.post('/api/register', async (req, res) => {
     console.log(req.body)
@@ -124,30 +136,15 @@ app.post('/api/login', async (req, res) => {
         //Use JWT to sign a token
         const token = jwt.sign(user, jwt_Secret, {expiresIn: '1h'});
         req.session.token = token;
-        return res.json({ status: 'ok', data: token})
+        console.log(user.username);
+        return res.json({ status: 'ok', data: token, username: user.username})
     }
 
     res.json({status: 'error', data: 'Invalid username/password'})
 
 
 })
-
-function authenticate(req, res, next) {
-  const token = req.session.token;
-
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  jwt.verify(token, 'your-jwt-secret', (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-    req.user = decoded;
-    next();
-  });
-}
-
+  
 io.on('connection',(socket)=>{
     console.log('User Connected');
     socket.on('disconnect', () => {
