@@ -44,6 +44,7 @@ const formSubmitted = () => {
     let formData = {};
     formData.title = $('#title').val();
     formData.description = $('#description').val().replace(/\n/g, '<br>');
+    formData.userID = 
     postNotes(formData);
     location.reload();
 };
@@ -63,6 +64,8 @@ function postNotes(Notes){
 }
 
 function getAllNotes() {
+    console.log(user.username);
+    console.log(req.session.username);
     $.get('/api/Notes', (response) => {
         if (response.statusCode === 200) {
             addCards(response.data);
