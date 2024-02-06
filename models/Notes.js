@@ -64,4 +64,4 @@ function updateNote(id, updatedData, callback) {
 const Note = mongoose.model('Note', noteSchema);
 
 module.exports = {postNotes, getAllNotes, getNote, updateNote, deleteNote};
-module.exports = Note;
+module.exports.Note = Note;

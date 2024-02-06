@@ -1,5 +1,4 @@
 const collection = require('../models/Notes');
-
 const postNotes = (req, res) => {
     let Notes = req.body;
     collection.postNotes(Notes, (err, result) => {
