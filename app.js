@@ -1,3 +1,4 @@
+let globalUsername;
 /* Displaying exsiting notes */
 const addCards = (items) => {
     items.forEach((item) => {
@@ -44,6 +45,7 @@ const formSubmitted = () => {
     let formData = {};
     formData.title = $('#title').val();
     formData.description = $('#description').val().replace(/\n/g, '<br>');
+    formData.username = globalUsername;
     formData.userID = 
     postNotes(formData);
     location.reload();
@@ -68,7 +70,7 @@ function getAllNotes() {
     $.get('/api/getNotes', (response) => {
         console.log('getNotes API working')
         if (response.statusCode === 200) {
-            console.log(response.username);
+            globalUsername = response.username;
             addCards(response.data);
         }
     });
@@ -148,10 +150,9 @@ $(document).ready(function () {
     $('.materialboxed').materialbox();
 
     $('#formSubmit').click(() => {
-        formSubmitted();
+        formSubmitted(globalUsername);
     });
 
     $('.modal').modal();
     getAllNotes();
 });
-
