@@ -1,3 +1,4 @@
+const { Note, postNotes, getAllNotes, getNote, updateNote, deleteNote } = require('./models/Notes');
 let express = require('express');
 const session = require('express-session');
 let app = express();
@@ -119,8 +120,6 @@ app.post('/api/login', async (req, res) => {
     console.log('username', username, 'password', password)
     passwordString = toString(password)
 
-    console.log('Login password', passwordString)
-
     //Check that user exists
     const user = await User.findOne({ username }).lean()
 
@@ -129,21 +128,28 @@ app.post('/api/login', async (req, res) => {
         return res.json({ status: 'error', error: 'Invalid username/password'})
     }
     
-    console.log('Login password', passwordString)
     if(await bcrypt.compare(passwordString, user.password)){
         //If the password compares and is compatible with the hashed password stored for the user, proceed with login
 
         //Use JWT to sign a token
         const token = jwt.sign(user, jwt_Secret, {expiresIn: '1h'});
         req.session.token = token;
-        console.log(user.username);
+        req.session.username = user.username;
         return res.json({ status: 'ok', data: token, username: user.username})
     }
 
     res.json({status: 'error', data: 'Invalid username/password'})
 
 
-})
+app.get('/api/getNotes', authenticate, async (req, res) => {
+    // Access user information using req.user
+    const username = req.session.username;
+  
+    // Assuming there's a 'username' field in your Note schema
+    const notes = await Note.find({ username: username }).lean();
+  
+    res.json({ statusCode: 200, data: notes, username: username });
+  });
   
 io.on('connection',(socket)=>{
     console.log('User Connected');

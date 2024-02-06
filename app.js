@@ -1,3 +1,5 @@
+let globalUsername;
+
 /* Displaying exsiting notes */
 const addCards = (items) => {
     items.forEach((item) => {
@@ -41,14 +43,18 @@ const addCards = (items) => {
 };
 
 const formSubmitted = () => {
+    console.log('inside formSubmitted() function in app.js');
     let formData = {};
     formData.title = $('#title').val();
     formData.description = $('#description').val().replace(/\n/g, '<br>');
+    formData.username = globalUsername;
+    formData.userID = 
     postNotes(formData);
     location.reload();
 };
 
 function postNotes(Notes){
+    console.log('inside postNotes() function in app.js');
     $.ajax({
         url:'/api/Notes',
         type:'POST',
@@ -65,6 +71,7 @@ function postNotes(Notes){
 function getAllNotes() {
     $.get('/api/Notes', (response) => {
         if (response.statusCode === 200) {
+            globalUsername= response.username;
             addCards(response.data);
         }
     });
@@ -144,10 +151,10 @@ $(document).ready(function () {
     $('.materialboxed').materialbox();
 
     $('#formSubmit').click(() => {
-        formSubmitted();
+        //capturing username of the successfully logged in user requesting to add a new note
+        formSubmitted(globalUsername);
     });
 
     $('.modal').modal();
     getAllNotes();
 });
-
