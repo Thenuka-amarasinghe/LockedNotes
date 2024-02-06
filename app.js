@@ -39,6 +39,7 @@ const addCards = (items) => {
             openUpdateForm(noteId);
         });
 };
+const key = 'key'
 
 const formSubmitted = () => {
     let formData = {};
@@ -49,6 +50,12 @@ const formSubmitted = () => {
 };
 
 function postNotes(Notes){
+    const encryptedTitle = CryptoJS.AES.encrypt(Notes.title, key).toString(); 
+    const encryptedDescription = CryptoJS.AES.encrypt(Notes.description, key).toString(); 
+    
+    Notes.title = encryptedTitle;
+    Notes.description = encryptedDescription;
+
     $.ajax({
         url:'/api/Notes',
         type:'POST',
@@ -65,10 +72,19 @@ function postNotes(Notes){
 function getAllNotes() {
     $.get('/api/Notes', (response) => {
         if (response.statusCode === 200) {
-            addCards(response.data);
+            const notes = response.data;
+            notes.forEach(note => {
+                const decryptedTitle = CryptoJS.AES.decrypt(note.title, key).toString(CryptoJS.enc.Utf8);
+                const decryptedDescription = CryptoJS.AES.decrypt(note.description, key).toString(CryptoJS.enc.Utf8);
+                
+                note.title = decryptedTitle;
+                note.description = decryptedDescription;
+            });
+            addCards(notes);
         }
     });
 }
+
 
 const deleteNote = (id) => {
     console.log('deleteNote method in app.js. ID = ', id);
@@ -102,9 +118,13 @@ function openUpdateForm(noteId) {
     // Fetch the existing note data
     $.get(`/api/Notes/${noteId}`, (response) => {
         if (response.statusCode === 200) {
-            // Populate the update form with existing data
-            $('#updateTitle').val(response.data.title);
-            $('#updateDescription').val(response.data.description);
+            // Decrypt the title and description
+            const decryptedTitle = CryptoJS.AES.decrypt(response.data.title, key).toString(CryptoJS.enc.Utf8);
+            const decryptedDescription = CryptoJS.AES.decrypt(response.data.description, key).toString(CryptoJS.enc.Utf8);
+
+            // Populate the update form with decrypted data
+            $('#updateTitle').val(decryptedTitle);
+            $('#updateDescription').val(decryptedDescription);
             // Show the update modal
             $('#updateNoteModal').modal('open');
             $('#updateNoteBtn').click(() => {
@@ -116,9 +136,10 @@ function openUpdateForm(noteId) {
 
 function updateNote(id) {
     console.log('updateNote method in app.js. ID = ', id);
+    
     let updatedData = {
-        title: $('#updateTitle').val(),
-        description: $('#updateDescription').val().replace(/\n/g, '<br>')
+        title: CryptoJS.AES.encrypt($('#updateTitle').val(), key).toString(),
+        description: CryptoJS.AES.encrypt($('#updateDescription').val().replace(/\n/g, '<br>'), key).toString()
     };
 
     $.ajax({
@@ -134,13 +155,13 @@ function updateNote(id) {
             console.error('Error updating note by ID:', error);
         }
     });
-};
+}
 
 //event handler for the "document ready" event.
 //Anything inside this function will execute when the HTML document has finished loading.
 console.log('outside ready function');
 $(document).ready(function () {
-    console.log('Event handlers to execute when HTML fnished loading');
+    console.log('Event handlers to execute when HTML finished loading');
     $('.materialboxed').materialbox();
 
     $('#formSubmit').click(() => {
@@ -150,4 +171,3 @@ $(document).ready(function () {
     $('.modal').modal();
     getAllNotes();
 });
-
