@@ -1,4 +1,5 @@
 let express = require('express');
+const session = require('express-session');
 let app = express();
 let port = process.env.port || 3000;
 require('./dbConnection');
@@ -9,10 +10,14 @@ let io = require('socket.io')(http);
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const User = require('./models/Users')
+const Note = require('./models/Notes')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const uuid = require('uuid');
+const { ObjectId } = require('mongodb');
 
 const jwt_Secret = 'thisisastringthatissupposedtobesecret123129!#$%^&*!#(!#)_312039812903809128'
+const session_Secret = 'LockedNotes5WVnp,/UhZZG61)PLCn>GLt5[/Kw=Pg[ibeK|gjP>Y$b&<ogD8a6*[}R_Or"VsM'
 
 mongoose.connect('mongodb://127.0.0.1:27017/login-LockedNotes')
 
@@ -21,11 +26,50 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use('/api/Notes',router);
 
-//Using bodyParser to read JSON data
-app.use(bodyParser.json())
+// Using bodyParser to read JSON data
+app.use(bodyParser.json());
 
-app.get('/', function(req, res){
-    res.redirect('/HomePage.html');
+// Adding session management
+app.use(
+  session({
+    secret: session_Secret,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+function authenticate(req, res, next) {
+    console.log('Inside authenticate middleware');
+    
+    const token = req.session.token;
+  
+    if (!token) {
+      console.log('No token found, redirecting to login');
+      return res.redirect('/LoginPage.html');
+    }
+  
+    jwt.verify(token, jwt_Secret, (err, decoded) => {
+      if (err) {
+        console.error('Token verification failed:', err);
+        console.log('Destroying session and redirecting to login');
+        req.session.destroy();
+        return res.redirect('/LoginPage.html');
+      }
+  
+      console.log('Token verification successful, proceeding to the next middleware/route');
+      req.user = decoded;
+      next();
+    });
+  }
+
+app.get('/AccountPage.html', authenticate, (req, res) => {
+  // Access user information using req.user
+  console.log(`Getting user's notes`);
+  res.sendFile(path.join(__dirname, 'public', 'AccountPage.html'));
+});
+
+app.get('/', function (req, res) {
+  res.redirect('/HomePage.html');
 });
 
 app.post('/api/register', async (req, res) => {
@@ -50,6 +94,7 @@ app.post('/api/register', async (req, res) => {
 
     try {
         const response = await User.create({
+            userID: uuid.v4(),
             username,
             password,
             email
@@ -90,18 +135,30 @@ app.post('/api/login', async (req, res) => {
         //If the password compares and is compatible with the hashed password stored for the user, proceed with login
 
         //Use JWT to sign a token
-        const token = jwt.sign({ 
-            id: user._id, 
-            username: user.username
-        }, jwt_Secret)
-        return res.json({ status: 'ok', data: token})
+        const token = jwt.sign(user, jwt_Secret, {expiresIn: '1h'});
+        req.session.token = token;
+        req.session.username = user.username;
+        console.log(user.username);
+        console.log(req.session.username);
+        return res.json({ status: 'ok', data: token, username: user.username})
     }
 
     res.json({status: 'error', data: 'Invalid username/password'})
 
-
 })
 
+app.get('/api/getNotes', authenticate, async (req, res) => {
+    // Access user information using req.user
+    const username = req.session.username;
+    console.log(username);
+    console.log(req.session.username);
+  
+    // Assuming there's a 'username' field in your Note schema
+    const notes = await Note.find({ username: username }).lean();
+  
+    res.json({ statusCode: 200, data: notes, username: username });
+  });
+  
 io.on('connection',(socket)=>{
     console.log('User Connected');
     socket.on('disconnect', () => {
