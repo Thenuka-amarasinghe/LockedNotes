@@ -17,7 +17,7 @@ const uuid = require('uuid');
 const jwt_Secret = 'thisisastringthatissupposedtobesecret123129!#$%^&*!#(!#)_312039812903809128'
 const session_Secret = 'LockedNotes5WVnp,/UhZZG61)PLCn>GLt5[/Kw=Pg[ibeK|gjP>Y$b&<ogD8a6*[}R_Or"VsM'
 
-mongoose.connect('mongodb://localhost:27017/login-LockedNotes')
+mongoose.connect('mongodb://127.0.0.1:27017/login-LockedNotes')
 
 app.use(express.static(__dirname + '/'));
 app.use(express.json());
