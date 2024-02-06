@@ -16,9 +16,9 @@
                 <a href="HomePage.html" class="brand-logo logo_css"><img class="logo" src="Logo.png"></a>
             </div>
             <div class="navbar-right">
-                <button class="nav-button">About Us</button>
-                <button class="nav-button">Access a Note</button>
-                <button class="nav-button">Sign Out</button>
+                <a href="/HomePage.html"><button class="nav-button">Home</button></a>
+                <a href="/LoginPage.html"><button class="nav-button">Access Your Notes</button></a>
+                <button class="nav-button" id="signOutButton">Sign Out</button>
             </div>
         </div>
     </nav>
@@ -103,6 +103,33 @@
             </div>          
         </div>
     </main>
+    <script>
+    document.getElementById('signOutButton').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/api/signout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        });
+        const data = await response.json();
+        if (response.ok) {
+        // Handle successful sign-out
+        console.log(data.message);
+        // Redirect to home page after signing the user out of their account
+        window.location.href = '/HomePage.html'; 
+        } else {
+        // If there are errors with the sign out, produce the error from the /api/signout api
+        console.error('Sign-out failed:', data.error); 
+        // Let user know that their sign out reqest failed
+        alert('Sign-out failed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error signing out:', error);
+        alert('Error signing out. Please try again later.');
+    }
+    });
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
