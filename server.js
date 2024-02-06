@@ -58,7 +58,7 @@ function authenticate(req, res, next) {
         return res.redirect(redirectUrl);
       }
   
-      console.log('Token verification successful, proceeding to the next middleware/route');
+      console.log('Token verification successful, we shall proceed.');
       req.user = decoded;
       next();
     });
