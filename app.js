@@ -1,5 +1,3 @@
-let globalUsername;
-/* Displaying exsiting notes */
 const addCards = (items) => {
     items.forEach((item) => {
         let itemToAppend =
@@ -45,33 +43,55 @@ const formSubmitted = () => {
     let formData = {};
     formData.title = $('#title').val();
     formData.description = $('#description').val().replace(/\n/g, '<br>');
-    formData.username = globalUsername;
-    formData.userID = 
+    formData.username = sessionStorage.getItem('username');
+    // formData.userID = 
     postNotes(formData);
     location.reload();
 };
 
 function postNotes(Notes){
-    $.ajax({
-        url:'/api/Notes',
-        type:'POST',
-        data:Notes,
-        success: (result)=>{
-            if (result.statusCode === 200) {
-                alert('Note added successfully');
-                location.reload();
+
+    // retrieve encryption key from session storage and encrypt notes
+    try {
+        const clientKey = sessionStorage.getItem('clientKey');
+        const encryptedTitle = CryptoJS.AES.encrypt(Notes.title, clientKey).toString(); 
+        const encryptedDescription = CryptoJS.AES.encrypt(Notes.description, clientKey).toString(); 
+        console.log("Note before encryption:", Notes);
+        
+        Notes.title = encryptedTitle;
+        Notes.description = encryptedDescription;
+        console.log("Note after encryption:", Notes);
+
+        $.ajax({
+            url:'/api/Notes',
+            type:'POST',
+            data:Notes,
+            success: (result)=>{
+                if (result.statusCode === 200) {
+                    alert('Note added successfully');
+                    location.reload();
+                }
             }
-        }
-    });
+        });
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 function getAllNotes() {
     console.log('Getting all notes');
     $.get('/api/getNotes', (response) => {
-        console.log('getNotes API working')
         if (response.statusCode === 200) {
-            globalUsername = response.username;
-            addCards(response.data);
+            const clientKey = sessionStorage.getItem('clientKey');
+            const notes = response.data;
+            notes.forEach(note => {
+                const decryptedTitle = CryptoJS.AES.decrypt(note.title, clientKey).toString(CryptoJS.enc.Utf8);
+                const decryptedDescription = CryptoJS.AES.decrypt(note.description, clientKey).toString(CryptoJS.enc.Utf8);
+                
+                note.title = decryptedTitle;
+                note.description = decryptedDescription;
+            });
+            addCards(notes);
         }
     });
 }
@@ -108,9 +128,15 @@ function openUpdateForm(noteId) {
     // Fetch the existing note data
     $.get(`/api/Notes/${noteId}`, (response) => {
         if (response.statusCode === 200) {
+
+            // retrieve clientKey and decrypt note
+            const clientKey = sessionStorage.getItem('clientKey');
+            const decryptedTitle = CryptoJS.AES.decrypt(response.data.title, clientKey).toString(CryptoJS.enc.Utf8);
+            const decryptedDescription = CryptoJS.AES.decrypt(response.data.description, clientKey).toString(CryptoJS.enc.Utf8);
+
             // Populate the update form with existing data
-            $('#updateTitle').val(response.data.title);
-            $('#updateDescription').val(response.data.description);
+            $('#updateTitle').val(decryptedTitle);
+            $('#updateDescription').val(decryptedDescription);
             // Show the update modal
             $('#updateNoteModal').modal('open');
             $('#updateNoteBtn').click(() => {
@@ -122,9 +148,12 @@ function openUpdateForm(noteId) {
 
 function updateNote(id) {
     console.log('updateNote method in app.js. ID = ', id);
+
+    const clientKey = sessionStorage.getItem('clientKey');
+
     let updatedData = {
-        title: $('#updateTitle').val(),
-        description: $('#updateDescription').val().replace(/\n/g, '<br>')
+        title: CryptoJS.AES.encrypt($('#updateTitle').val(), key).toString(),
+        description: CryptoJS.AES.encrypt($('#updateDescription').val().replace(/\n/g, '<br>'), key).toString()
     };
 
     $.ajax({
