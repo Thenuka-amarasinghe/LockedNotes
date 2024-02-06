@@ -1,3 +1,4 @@
+const { Note, postNotes, getAllNotes, getNote, updateNote, deleteNote } = require('./models/Notes');
 let express = require('express');
 const session = require('express-session');
 let app = express();
@@ -10,7 +11,6 @@ let io = require('socket.io')(http);
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const User = require('./models/Users')
-const Note = require('./models/Notes')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const uuid = require('uuid');
@@ -122,8 +122,6 @@ app.post('/api/login', async (req, res) => {
     console.log('username', username, 'password', password)
     passwordString = toString(password)
 
-    console.log('Login password', passwordString)
-
     //Check that user exists
     const user = await User.findOne({ username }).lean()
 
@@ -140,8 +138,6 @@ app.post('/api/login', async (req, res) => {
         const token = jwt.sign(user, jwt_Secret, {expiresIn: '1h'});
         req.session.token = token;
         req.session.username = user.username;
-        console.log(user.username);
-        console.log(req.session.username);
         return res.json({ status: 'ok', data: token, username: user.username})
     }
 
