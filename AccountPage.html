@@ -9,8 +9,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- include navbar module -->
-    <div id="navbar-module" include-html="/includes/navbar.html"></div>
+
+    <!-- Navigation bar -->
+    <nav>
+        <div class="navbar">
+            <div class="navbar-left">
+                <a href="HomePage.html" class="brand-logo logo_css"><img class="logo" src="Logo.png"></a>
+            </div>
+            <div class="navbar-right">
+                <a href="/HomePage.html"><button class="nav-button">Home</button></a>
+                <a href="/LoginPage.html"><button class="nav-button">Access Your Notes</button></a>
+                <button class="nav-button" id="signOutButton">Sign Out</button>
+            </div>
+        </div>
+    </nav>
 
     <!-- Website Content -->
     <main class="main-body">
@@ -32,7 +44,7 @@
             <div id="newNote" class="modal modal-fixed-footer">
                 <div class="row modal-content">
                     <form id="noteForm" class="col s12">
-                        <input type="hidden" id="noteId" name="noteId">
+						<input type="hidden" id="noteId" name="noteId">
 
                         <div class="row">
                             <div class="input-field col s6">
@@ -54,65 +66,78 @@
                     </form>
                 </div>
             </div>
-                    
-            <!-- Update Modal -->
-            <div id="updateNoteModal" class="modal">
-                <div class="modal-content">
-                    <h4>Update Note</h4>
-                    <form id="updateNoteForm">
-                        <div class="row">
-                            <div class="input-field col s6">
-                                <input id="updateTitle" type="text" class="validate">
-                                <label for="updateTitle"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <textarea id="updateDescription" class="materialize-textarea validate"></textarea>
-                                <label for="updateDescription"></label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <button class="btn waves-effect waves-light" type="button" id="updateNoteBtn">Update</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+					
+			<!-- Update Modal -->
+			<div id="updateNoteModal" class="modal">
+				<div class="modal-content">
+					<h4>Update Note</h4>
+					<form id="updateNoteForm">
+						<div class="row">
+							<div class="input-field col s6">
+								<input id="updateTitle" type="text" class="validate">
+								<label for="updateTitle"></label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="input-field col s12">
+								<textarea id="updateDescription" class="materialize-textarea validate"></textarea>
+								<label for="updateDescription"></label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="input-field col s12">
+								<button class="btn waves-effect waves-light" type="button" id="updateNoteBtn">Update</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
 
             <!-- Header before displaying notes -->
             <div class="center-align">
                 <h4 class="header center-align">Your Notes</h4>
             </div>
 
-            <!-- Displaying existing notes -->
-            <div class="row" id="card-section">
-                
-            </div>          
+			<!-- Displaying existing notes -->
+			<div class="row" id="card-section">
+				
+			</div>			
         </div>
     </main>
 
-    <!-- include footer module -->
-    <div id="footer-module" include-html="/includes/footer.html"></div>
-
-    <script> 
-        console.log("session data:", req.session.username);
-        function logConsole(){
-            console.log(req.session.username);
+    <script>
+    document.getElementById('signOutButton').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/api/signout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
         }
+        });
+        const data = await response.json();
+        if (response.ok) {
+        // Handle successful sign-out
+        console.log(data.message);
+        // Redirect to home page after signing the user out of their account
+        window.location.href = '/HomePage.html'; 
+        } else {
+        // If there are errors with the sign out, produce the error from the /api/signout api
+        console.error('Sign-out failed:', data.error); 
+        // Let user know that their sign out reqest failed
+        alert('Sign-out failed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error signing out:', error);
+        alert('Error signing out. Please try again later.');
+    }
+    });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
-    <!-- Script to handle HTML includes -->
-    <script>
-        $(function(){
-            $("#navbar-module").load("/includes/navbar.html");
-            $("#footer-module").load("/includes/footer.html");
-        });
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
 </body>
 </html>
