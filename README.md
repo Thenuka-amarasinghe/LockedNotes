@@ -70,4 +70,4 @@ To get started with LockedNotes, follow the installation instructions provided b
 11. Any POST, PUT, or DELETE operation on the note triggers a GET operation automatically, generating cards for each note corresponding to the username logged in successfully.
 12. The database may contain records for many users at any time, but the application is configured to rightfully do CRUD only on the records corresponding to the logged-in username, not disturbing other users' records in the db.
 13. The sign-out feature destroys the JWT session of the user through the token.
-14. GET API called after sign out rightfully diplays no records.s
+14. GET API called after sign out rightfully diplays no records.
