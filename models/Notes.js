@@ -1,6 +1,13 @@
 const client = require('../dbConnection');
 const collection = client.db().collection('Notes');
 const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
+
+const noteSchema = new mongoose.Schema({
+    title: { type: String},
+    description: { type: String},
+    username: { type: String }
+}, {collection: 'Notes'});
 
 function postNotes(note, callback) {
     collection.insertOne(note, callback);
@@ -54,4 +61,7 @@ function updateNote(id, updatedData, callback) {
     );
 }
 
-module.exports = { postNotes, getAllNotes, getNote, updateNote, deleteNote};
+const Note = mongoose.model('Note', noteSchema);
+
+module.exports = {postNotes, getAllNotes, getNote, updateNote, deleteNote};
+module.exports.Note = Note;

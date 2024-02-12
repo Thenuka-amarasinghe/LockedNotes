@@ -9,52 +9,107 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation bar -->
-    <nav>
-        <div class="navbar">
-            <div class="navbar-left">
-                <a href="HomePage.html" class="brand-logo logo_css"><img class="logo" src="Logo.png"></a>
-            </div>
-            <div class="navbar-right">
-                <button class="nav-button">About Us</button>
-                <button class="nav-button">Access a Note</button>
-                <button class="nav-button">
-                    <a href="/LoginPage.html">Sign In</a>
-                </button>
-            </div>
-        </div>
-    </nav>
+    <!-- include navbar module -->
+    <div id="navbar-module" include-html="/includes/navbar.html"></div>
 
     <!-- Website Content -->
     <main class="main-body">
         <div class="container">
-            <div class="row">
-                    <h1 id="heading" class="center-align">Welcome to LockedNotes!</h1>
-            </div>
 
-            <div class="container">
-                <div class="content">
+            <!-- Hero section -->
+            <section class="hero-section">
+                <div class="container center-align">
+                    <h1>Welcome to LockedNotes</h1>
+                    <p class="flow-text">Using our state-of-the-art encryption technology, you can write, view, and share important notes securely.</p>
+                    <a href="/LoginPage.html" class="btn orange btn-rounded sign-up-button">Sign Up Now!</a>
+                </div>
+            </section>
+
+            <h2 class="center-align">Features</h2>
+
+            <!-- Featured Message -->
+            <section class="content featured-message">
+                <div class="container left-align">
                     <h3>Make Secure Notes</h3>
-                    <p>LockedNotes allows you to securely store notes, be they private notes or notes that you would like to share with special people in your life. All encrypted for whoever's eyes you wish to have see, so what are you waiting for? Sign Up Now!!</p><br>
-                    <button class="sign-up-button">
-                        <a href="/LoginPage.html">Sign Up!</a>
-                    </button>
+                    <p>LockedNotes allows you to securely store notes, be they private notes or notes that you would like to share with special people in your life. All encrypted for whoever's eyes you wish to have see, so what are you waiting for? Sign Up Now!!
+                    </p>
+                    <a href="#signup" class="btn orange btn-rounded sign-up-button">Sign Up Now!</a>
                 </div>
-                <div class="content">
-                    <h2>Encryption</h2>
-                    <p>All of the encryption used is industry standard so you know that your notes are absolutely protected!</p>
+                <div class="container right-align">
+                    <img src="assets\img\note.png" alt="security-image">
                 </div>
-                <div class="content">
-                    <h2>Sharing</h2>
-                    <p>Sample text</p>
+            </section>
+
+            <section class="content featured-message">
+                <div class="container left-align">
+                    <img src="assets\img\encrypt.png" alt="encryption-image">
                 </div>
-            </div>		
+                <div class="container right-align">
+                    <h3>Secure Encryption</h3>
+                    <p>Our cutting-edge encryption technology safeguards your personal thoughts and ideas. We prioritize the confidentiality of your notes, ensuring they remain shielded from any unauthorized access. With our robust security measures, you can trust LockedNotes to protect your information, empowering you to express yourself freely.
+                    </p>
+                </div>
+            </section>
+
+            <section class="content featured-message">
+                <div class="container left-align">
+                    <h3>User-Friendly Interface</h3>
+                    <p>Our user-friendly interface is thoughtfully designed, ensuring a seamless and intuitive experience. Navigate effortlessly and manage your notes with ease, as LockedNotes puts the control in your hands. We believe in making your interaction with our platform not just efficient, but a delightful journey where your focus remains on your ideas, and our interface does the rest.</p>
+                </div>
+                <div class="container right-align">
+                    <img src="assets\img\user-friendly.png" alt="happy-user-emoji">
+                </div>
+            </section>
+
+            <section class="content featured-message">
+                <div class="container left-align">
+                    <img src="assets\img\collaborate.png" alt="collaboration-image">
+                </div>
+                <div class="container right-align">
+                    <h3>Collaboration</h3>
+                    <p>Elevate teamwork with LockedNotes' collaborative features. Seamlessly share encrypted notes, fostering secure communication with your team. Whether you're working on crucial projects or brainstorming ideas, LockedNotes provides a trusted space for seamless collaboration. Unleash the power of working together effortlessly and securely, bringing your collective visions to life.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Testimonial Section -->
+            <section id="#testimonials" class="testimonial-section">
+                <div class="container">
+                    <div class="row">
+                        <h2 class="center-align">Testimonials</h2>
+                        <div class="col s12 m6">
+                            <div class="testimonial content">
+                                <img src="assets\img\male.jpg" alt="Male Avatar" class="avatar">
+                                <p>"LockedNotes changed the way I organize and secure my notes. It's a game-changer!"</p>
+                                <span class="avatar-name">Rahul Sharma</span>
+                            </div>
+                        </div>
+                        <div class="col s12 m6">
+                            <div class="testimonial content right-align">
+                                <img src="assets\img\female.jpg" alt="Female Avatar" class="avatar">
+                                <p>"I love how easy it is to use LockedNotes. It provides the security I need for my sensitive information."</p>
+                                <span class="avatar-name">Kirsten Charlotte</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>	
         </div>
     </main>
+
+    <!-- include footer module -->
+    <div id="footer-module" include-html="/includes/footer.html"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
+    <!-- Script to handle HTML includes -->
+    <script>
+        $(function(){
+            $("#navbar-module").load("/includes/navbar.html");
+            $("#footer-module").load("/includes/footer.html");
+        });
+    </script>
 </body>
 </html>
